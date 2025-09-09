@@ -1,49 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>For Amelia ♡</title>
-  <style>
-    :root { --bg:#0e0e0f; --ink:#f5f3ee; --muted:#b8b0a3; }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
-    header{padding:18px 16px;text-align:center}
-    h1{margin:0;font-size:20px}
-    header p{margin:.25rem 0 0;color:var(--muted)}
-    .masonry{column-gap:16px;max-width:1200px;margin:0 auto;padding:12px}
-    @media(min-width:1200px){.masonry{column-count:4}}
-    @media(min-width:800px) and (max-width:1199px){.masonry{column-count:3}}
-    @media(min-width:560px) and (max-width:799px){.masonry{column-count:2}}
-    @media(max-width:559px){.masonry{column-count:1}}
-    .masonry img{width:100%;display:block;margin:0 0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.06)}
-  </style>
-</head>
-<body>
-  <header>
-    <h1>For Amelia ♡</h1>
-    <p>A cozy scroll of our photos.</p>
-  </header>
+<main class="masonry" id="gallery"></main>
+<script>
+  const files = [
+    "DSC06943.JPG","DSC07286.JPG","DSC07333.JPG","DSC07616.JPG","DSC07618.JPG",
+    "DSC07711.JPG","DSC08121.JPG","IMG_4520.jpg","IMG_4526.jpg","IMG_4648.jpg",
+    "IMG_4683.jpg","IMG_5256.jpg","IMG_6030.jpg","IMG_7075.jpg","IMG_6515_2.JPG"
+  ];
+  const roots = ["media/","Media/","media/media/"];
+  const gallery = document.getElementById("gallery");
 
-  <main class="masonry">
-    <!-- JPGs with UPPERCASE extension -->
-    <img src="media/DSC06943.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC07286.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC07333.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC07616.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC07618.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC07711.JPG" alt="photo" loading="lazy">
-    <img src="media/DSC08121.JPG" alt="photo" loading="lazy">
-    <!-- jpg (lowercase) files -->
-    <img src="media/IMG_4520.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_4526.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_4648.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_4683.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_5256.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_6030.jpg" alt="photo" loading="lazy">
-    <img src="media/IMG_7075.jpg" alt="photo" loading="lazy">
-    <!-- include this if you uploaded it -->
-    <img src="media/IMG_6515_2.JPG" alt="photo" loading="lazy">
-  </main>
-</body>
-</html>
+  function addImg(name){
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.alt = "photo";
+    img.style.cssText = "width:100%;display:block;margin:0 0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.06)";
+    img.dataset.name = name;
+    img.dataset.try = "0";
+    img.src = roots[0] + name;
+    img.onerror = function(){
+      let t = parseInt(img.dataset.try,10);
+      const src = img.getAttribute("src");
+      if(t < roots.length-1){
+        t++; img.dataset.try = t.toString();
+        img.src = roots[t] + name;
+      } else if(src.endsWith(".JPG")){
+        img.src = src.replace(/\.JPG$/, ".jpg");
+      } else if(src.endsWith(".jpg")){
+        img.src = src.replace(/\.jpg$/, ".JPG");
+      } else {
+        img.onerror = null; // give up
+      }
+    };
+    gallery.appendChild(img);
+  }
+  files.forEach(addImg);
+</script>
