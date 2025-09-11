@@ -34,3 +34,80 @@
   }
   files.forEach(addImg);
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Photo Carousel</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    .carousel {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow: hidden;
+    }
+    .carousel img {
+      width: 100%;
+      display: none;
+      border-radius: 12px;
+    }
+    .carousel img.active {
+      display: block;
+    }
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: none;
+      padding: 0.5em 0.75em;
+      cursor: pointer;
+      font-size: 2rem;
+    }
+    .prev { left: 10px; }
+    .next { right: 10px; }
+  </style>
+</head>
+<body>
+  <div class="carousel" id="carousel">
+    <button class="nav prev" id="prev">&#10094;</button>
+    <button class="nav next" id="next">&#10095;</button>
+  </div>
+  <script>
+    const files = [
+      "DSC06943.JPG","DSC07286.JPG","DSC07333.JPG","DSC07616.JPG","DSC07618.JPG",
+      "DSC07711.JPG","DSC08121.JPG","IMG_4520.jpg","IMG_4526.jpg","IMG_4648.jpg",
+      "IMG_4683.jpg","IMG_5256.jpg","IMG_6030.jpg","IMG_7075.jpg","IMG_6515_2.JPG"
+    ];
+    const carousel = document.getElementById('carousel');
+    files.forEach((name, index) => {
+      const img = document.createElement('img');
+      img.src = name;
+      img.alt = 'photo';
+      if(index === 0) img.classList.add('active');
+      carousel.insertBefore(img, document.getElementById('prev'));
+    });
+    const images = carousel.querySelectorAll('img');
+    let current = 0;
+    function show(idx) {
+      images[current].classList.remove('active');
+      current = (idx + images.length) % images.length;
+      images[current].classList.add('active');
+    }
+    document.getElementById('next').onclick = () => show(current + 1);
+    document.getElementById('prev').onclick = () => show(current - 1);
+    setInterval(() => show(current + 1), 4000);
+  </script>
+</body>
+</html>
